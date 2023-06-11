@@ -1,3 +1,4 @@
+const getDepth = require("get-depth");
 const meta = require("@turf/meta");
 const booleanClockwise = require("@turf/boolean-clockwise").default;
 
@@ -33,13 +34,15 @@ function each(geom, callback) {
       }
     });
   } else if (Array.isArray(geom)) {
-    const depth = getDepth(geojson);
+    const depth = getDepth(geom);
     if (depth === 4) {
-      it.forEach(polygon => {
+      geom.forEach(polygon => {
         callback(polygon);
       });
     } else if (depth === 3) {
-      callback(it);
+      callback(geom);
+    } else if (depth === 2) {
+      callback([geom]);
     }
   }
 }

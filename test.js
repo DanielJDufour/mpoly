@@ -23,8 +23,27 @@ const { Example, GeometryCollection, LineString, MultiPoint, MultiLineString, Mu
 
 test("mpoly.get (arcgis)", ({ eq }) => {
   Object.entries(arcgisjsons).forEach(([name, data]) => {
-    eq(mpoly.get(arcgisjsons[name]), mpoly.get(geojsons[name]));
+    const results = new Set();
+    results.add(JSON.stringify(mpoly.get(geojsons[name])));
+    results.add(JSON.stringify(mpoly.get(JSON.stringify(geojsons[name]))));
+    results.add(JSON.stringify(mpoly.get(arcgisjsons[name])));
+    results.add(JSON.stringify(mpoly.get(JSON.stringify(arcgisjsons[name]))));
+    eq(results.size, 1);
   });
+});
+
+test("coords", ({ eq }) => {
+  const coords = [
+    [100, 0],
+    [101, 0],
+    [101, 1],
+    [100, 1],
+    [100, 0]
+  ];
+  const expected = [[coords]];
+  eq(mpoly.get(coords), expected);
+  eq(mpoly.get([coords]), expected);
+  eq(mpoly.get([[coords]]), expected);
 });
 
 test("mpoly.get (geojson)", ({ eq }) => {
