@@ -1,6 +1,6 @@
 {
   "name": "mpoly",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Convert Input to a GeoJSON-Like MultiPolygon Geometry",
   "main": "mpoly.js",
   "files": [
