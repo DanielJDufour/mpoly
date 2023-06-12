@@ -6,14 +6,15 @@ function each(geom, callback) {
   // pre-processing steps
   if (typeof geom === "string") geom = JSON.parse(geom);
 
-  if (typeof geom.geometry === "object" && Array.isArray(geom.geometry.rings)) {
+  if (Array.isArray(geom?.geometry?.rings) || Array.isArray(geom?.rings)) {
     // convert esri to geojson polygons
     // ESRI JSON is a real pain here
     // exterior rings are clockwise
     // holes are counter-clockwise
 
     let current;
-    geom.geometry.rings.forEach(ring => {
+    const rings = geom?.geometry?.rings || geom?.rings;
+    rings.forEach(ring => {
       if (booleanClockwise(ring)) {
         // new polygon, so push any existing rings
         if (current) callback(current);

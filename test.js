@@ -28,6 +28,7 @@ test("mpoly.get (arcgis)", ({ eq }) => {
     results.add(JSON.stringify(mpoly.get(JSON.stringify(geojsons[name]))));
     results.add(JSON.stringify(mpoly.get(arcgisjsons[name])));
     results.add(JSON.stringify(mpoly.get(JSON.stringify(arcgisjsons[name]))));
+    results.add(JSON.stringify(mpoly.get(JSON.stringify(arcgisjsons[name].geometry))));
     eq(results.size, 1);
   });
 });
