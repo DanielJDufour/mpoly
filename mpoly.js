@@ -2,6 +2,17 @@ const getDepth = require("get-depth");
 const meta = require("@turf/meta");
 const booleanClockwise = require("@turf/boolean-clockwise").default;
 
+// supports nested feature collections
+function eachPart(it, callback) {
+  if (Array.isArray(it.features)) {
+    it.features.forEach(feat => {
+      eachPart(feat, callback);
+    });
+  } else {
+    callback(it);
+  }
+}
+
 function each(geom, callback) {
   // pre-processing steps
   if (typeof geom === "string") geom = JSON.parse(geom);
@@ -25,14 +36,16 @@ function each(geom, callback) {
     });
     callback(current);
   } else if ("type" in geom) {
-    meta.geomEach(geom, it => {
-      if (it.type === "Polygon") {
-        callback(it.coordinates);
-      } else if (it.type === "MultiPolygon") {
-        it.coordinates.forEach(polygon => {
-          callback(polygon);
-        });
-      }
+    eachPart(geom, part => {
+      meta.geomEach(part, it => {
+        if (it.type === "Polygon") {
+          callback(it.coordinates);
+        } else if (it.type === "MultiPolygon") {
+          it.coordinates.forEach(polygon => {
+            callback(polygon);
+          });
+        }
+      });
     });
   } else if (Array.isArray(geom)) {
     const depth = getDepth(geom);

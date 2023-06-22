@@ -147,3 +147,17 @@ test("mpoly.get (geojson)", ({ eq }) => {
     ]
   ]);
 });
+
+test("nested feature collection", ({ eq }) => {
+  const polys = mpoly.get({
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "FeatureCollection",
+        features: [MultiPolygon]
+      },
+      Polygon
+    ]
+  });
+  eq(polys.length, 3);
+});
